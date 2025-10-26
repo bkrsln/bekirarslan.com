@@ -13,17 +13,12 @@ const { block } = Astro.props
 let image = ''
 let altText = 'Image'
 
-// Get image URL - prioritize direct URLs to avoid missing files
+// Get image URL - always use original URLs for reliability
 if (block.Image.External) {
   image = block.Image.External.Url
 } else if (block.Image.File) {
-  // Use original Notion URL in dev mode or if local file doesn't exist
-  if (import.meta.env.DEV) {
-    image = block.Image.File.Url
-  } else {
-    // In production, try local file first, fallback to original URL
-    image = filePath(new URL(block.Image.File.Url))
-  }
+  // Always use original Notion URL to ensure images load
+  image = block.Image.File.Url
 }
 
 // Set better alt text from caption if available
