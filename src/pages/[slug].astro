@@ -33,7 +33,29 @@ const [blocks] = await Promise.all([
 ])
 
 let ogImage = ''
-if (post.FeaturedImage && post.FeaturedImage.Url) {
+
+// Find first image in the blog content for OG preview
+const firstImageBlock = blocks.find(block => block.Type === 'image' && block.Image)
+if (firstImageBlock && firstImageBlock.Image) {
+  let firstImageUrl = ''
+  
+  if (firstImageBlock.Image.External) {
+    firstImageUrl = firstImageBlock.Image.External.Url
+  } else if (firstImageBlock.Image.File) {
+    if (import.meta.env.DEV) {
+      firstImageUrl = firstImageBlock.Image.File.Url
+    } else {
+      firstImageUrl = filePath(new URL(firstImageBlock.Image.File.Url))
+    }
+  }
+  
+  if (firstImageUrl) {
+    ogImage = new URL(firstImageUrl, Astro.site)
+  }
+}
+
+// Fallback to featured image if no content image found
+if (!ogImage && post.FeaturedImage && post.FeaturedImage.Url) {
   ogImage = new URL(filePath(new URL(post.FeaturedImage.Url)), Astro.site)
 }
 ---

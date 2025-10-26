@@ -1,10 +1,10 @@
 .main header {
-  padding: 0 0 0.15rem;
+  padding: 0 0 0.05rem;
 }
 .main footer {
   border-top: 1px dashed #888;
   margin: 0 auto;
-  padding: 0.15rem 0 0;
+  padding: 0.05rem 0 0;
 }
 @media (max-width: 640px) {
   .main footer {
