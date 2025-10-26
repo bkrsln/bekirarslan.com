@@ -28,7 +28,7 @@ if (aboutPost) {
   <div slot="main" class={styles.main}>
     <!-- About Section -->
     {aboutPost && aboutBlocks && (
-      <div class={styles.post}>
+      <div class="about-section">
         <PostTitle post={aboutPost} enableLink={false} />
         <PostBody blocks={aboutBlocks} />
       </div>
@@ -57,6 +57,10 @@ if (aboutPost) {
 </Layout>
 
 <style>
+  .about-section {
+    margin: 1rem auto 2rem;
+  }
+
   .posts-list {
     max-width: none;
   }
