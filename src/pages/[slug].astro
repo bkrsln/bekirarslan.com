@@ -13,7 +13,6 @@ import Layout from '../layouts/Layout.astro'
 import PostDate from '../components/PostDate.astro'
 import PostTitle from '../components/PostTitle.astro'
 import PostBody from '../components/PostBody.astro'
-import PostRelativeLink from '../components/PostRelativeLink.astro'
 import styles from '../styles/blog.module.css'
 
 export async function getStaticPaths() {
@@ -76,10 +75,6 @@ if (!ogImage && post.FeaturedImage && post.FeaturedImage.Url) {
       <PostTitle post={post} enableLink={false} />
       <PostBody blocks={blocks} />
       <PostDate post={post} />
-
-      <footer>
-        <PostRelativeLink />
-      </footer>
     </div>
   </div>
 </Layout>
