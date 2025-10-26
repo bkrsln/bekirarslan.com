@@ -142,11 +142,11 @@ export async function getPosts(pageSize = 10): Promise<Post[]> {
 export async function getRankedPosts(pageSize = 10): Promise<Post[]> {
   const allPosts = await getAllPosts()
   return allPosts
-    .filter((post) => !!post.Rank)
     .sort((a, b) => {
-      if (a.Rank > b.Rank) {
+      // Sort by date, newest first
+      if (a.Date > b.Date) {
         return -1
-      } else if (a.Rank === b.Rank) {
+      } else if (a.Date === b.Date) {
         return 0
       }
       return 1
@@ -957,7 +957,7 @@ function _buildPost(pageObject: responses.PageObject): Post {
   }
 
   let featuredImage: FileObject | null = null
-  if (prop.FeaturedImage.files && prop.FeaturedImage.files.length > 0) {
+  if (prop.FeaturedImage && prop.FeaturedImage.files && prop.FeaturedImage.files.length > 0) {
     if (prop.FeaturedImage.files[0].external) {
       featuredImage = {
         Type: prop.FeaturedImage.type,
@@ -974,22 +974,21 @@ function _buildPost(pageObject: responses.PageObject): Post {
 
   const post: Post = {
     PageId: pageObject.id,
-    Title: prop.Page.title
+    Title: prop.Page && prop.Page.title
       ? prop.Page.title.map((richText) => richText.plain_text).join('')
       : '',
     Icon: icon,
     Cover: cover,
-    Slug: prop.Slug.rich_text
+    Slug: prop.Slug && prop.Slug.rich_text
       ? prop.Slug.rich_text.map((richText) => richText.plain_text).join('')
       : '',
-    Date: prop.Date.date ? prop.Date.date.start : '',
-    Tags: prop.Tags.multi_select ? prop.Tags.multi_select : [],
+    Date: prop.Date && prop.Date.date ? prop.Date.date.start : '',
+    Tags: prop.Tags && prop.Tags.multi_select ? prop.Tags.multi_select : [],
     Excerpt:
-      prop.Excerpt.rich_text && prop.Excerpt.rich_text.length > 0
+      prop.Excerpt && prop.Excerpt.rich_text && prop.Excerpt.rich_text.length > 0
         ? prop.Excerpt.rich_text.map((richText) => richText.plain_text).join('')
         : '',
     FeaturedImage: featuredImage,
-    Rank: prop.Rank.number ? prop.Rank.number : 0,
   }
 
   return post
