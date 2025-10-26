@@ -11,10 +11,26 @@ export interface Props {
 const { block } = Astro.props
 
 let image = ''
+let altText = 'Image'
+
+// Get image URL - prioritize direct URLs to avoid missing files
 if (block.Image.External) {
   image = block.Image.External.Url
 } else if (block.Image.File) {
-  image = filePath(new URL(block.Image.File.Url))
+  // Use original Notion URL in dev mode or if local file doesn't exist
+  if (import.meta.env.DEV) {
+    image = block.Image.File.Url
+  } else {
+    // In production, try local file first, fallback to original URL
+    image = filePath(new URL(block.Image.File.Url))
+  }
+}
+
+// Set better alt text from caption if available
+if (block.Image.Caption && block.Image.Caption.length > 0) {
+  altText = block.Image.Caption.map(text => text.PlainText).join('')
+} else {
+  altText = 'Blog post image'
 }
 ---
 
@@ -25,13 +41,28 @@ if (block.Image.External) {
         <div>
           {ENABLE_LIGHTBOX ? (
             <a data-fslightbox href={image} data-type="image">
-              <img src={image} alt="Image in a image block" loading="lazy" />
+              <img 
+                src={image} 
+                alt={altText} 
+                loading="lazy"
+              />
             </a>
           ) : (
-            <img src={image} alt="Image in a image block" loading="lazy" />
+            <img 
+              src={image} 
+              alt={altText} 
+              loading="lazy"
+            />
           )}
         </div>
         <Caption richTexts={block.Image.Caption} />
+      </div>
+    )
+  }
+  {
+    !image && (
+      <div class="image-error">
+        <p>🖼️ Image could not be loaded</p>
       </div>
     )
   }
@@ -66,6 +97,17 @@ if (block.Image.External) {
     height: auto;
     border-radius: 4px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .image-error {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-style: italic;
+  }
+
+  .image-error p {
+    margin: 0;
   }
 
   @media (max-width: 800px) {
