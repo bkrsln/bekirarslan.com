@@ -41,22 +41,26 @@ if (firstImageBlock && firstImageBlock.Image) {
   
   if (firstImageBlock.Image.External) {
     firstImageUrl = firstImageBlock.Image.External.Url
+    ogImage = firstImageUrl // External images can be used directly
   } else if (firstImageBlock.Image.File) {
     if (import.meta.env.DEV) {
       firstImageUrl = firstImageBlock.Image.File.Url
+      ogImage = firstImageUrl // Dev mode uses Notion URLs directly
     } else {
-      firstImageUrl = filePath(new URL(firstImageBlock.Image.File.Url))
+      // Production mode uses local files
+      const localPath = filePath(new URL(firstImageBlock.Image.File.Url))
+      ogImage = new URL(localPath, Astro.site).toString()
     }
-  }
-  
-  if (firstImageUrl) {
-    ogImage = new URL(firstImageUrl, Astro.site)
   }
 }
 
 // Fallback to featured image if no content image found
 if (!ogImage && post.FeaturedImage && post.FeaturedImage.Url) {
-  ogImage = new URL(filePath(new URL(post.FeaturedImage.Url)), Astro.site)
+  if (import.meta.env.DEV) {
+    ogImage = post.FeaturedImage.Url
+  } else {
+    ogImage = new URL(filePath(new URL(post.FeaturedImage.Url)), Astro.site).toString()
+  }
 }
 ---
 
