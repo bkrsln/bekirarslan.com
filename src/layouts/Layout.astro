@@ -137,7 +137,7 @@ if (database.Icon && database.Icon.Type === 'file') {
         </main>
 
         <footer class="site-footer">
-          <p>2008'den bu yana | Bekir Arslan</p>
+          <p>2008'den bu yana. | <a href="/archive">Blog arşivi</a>.</p>
         </footer>
       </div>
     </div>
@@ -174,6 +174,8 @@ if (database.Icon && database.Icon.Type === 'file') {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 1rem;
+    font-weight: bold;
   }
 
   .site-header h1 a {
@@ -220,6 +222,15 @@ if (database.Icon && database.Icon.Type === 'file') {
     margin: 0;
     color: #666;
     font-size: 0.9rem;
+  }
+
+  .site-footer a {
+    color: #007acc;
+    text-decoration: none;
+  }
+
+  .site-footer a:hover {
+    text-decoration: underline;
   }
 
   main {

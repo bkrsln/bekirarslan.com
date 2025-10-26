@@ -1,5 +1,4 @@
 ---
-import { NUMBER_OF_POSTS_PER_PAGE } from '../server-constants.ts'
 import {
   getPosts,
   getPostBySlug,
@@ -10,10 +9,11 @@ import Layout from '../layouts/Layout.astro'
 import NoContents from '../components/NoContents.astro'
 import PostTitle from '../components/PostTitle.astro'
 import PostBody from '../components/PostBody.astro'
+import { getPostLink, getDateStr } from '../lib/blog-helpers.ts'
 import styles from '../styles/blog.module.css'
 
 const [posts, aboutPost, database] = await Promise.all([
-  getPosts(NUMBER_OF_POSTS_PER_PAGE),
+  getPosts(5), // Son 5 yazı
   getPostBySlug('about'),
   getDatabase(),
 ])
@@ -36,41 +36,84 @@ if (aboutPost) {
 
     <!-- Latest Posts Section -->
     <section class="latest-posts">
-      {
-        posts.length === 0 ? (
-          <NoContents contents={posts} />
-        ) : (
-          posts.map((post) => (
-            <div class={styles.post} key={post.Slug}>
-              <PostTitle post={post} />
-            </div>
-          ))
-        )
-      }
-    </section>
-
-    <footer>
-      <div class="archive-link">
-        <a href="/archive">Blog Arşivi →</a>
+      <div class="posts-list">
+        {
+          posts.length === 0 ? (
+            <NoContents contents={posts} />
+          ) : (
+            posts.map((post) => (
+              <article class="post-item">
+                <a href={getPostLink(post.Slug)} class="post-link">
+                  <h2>{post.Title}</h2>
+                  <time>{getDateStr(post.Date)}</time>
+                </a>
+              </article>
+            ))
+          )
+        }
       </div>
-    </footer>
+    </section>
   </div>
 </Layout>
 
 <style>
-  .archive-link {
-    text-align: center;
-    margin-top: 2rem;
-    padding: 1rem;
+  .posts-list {
+    max-width: none;
   }
 
-  .archive-link a {
-    color: #007acc;
+  .post-item {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 1rem;
+  }
+
+  .post-item:last-child {
+    border-bottom: none;
+  }
+
+  .post-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     text-decoration: none;
-    font-weight: 500;
+    color: inherit;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
   }
 
-  .archive-link a:hover {
-    text-decoration: underline;
+  .post-link:hover {
+    background-color: #f8f9fa;
+  }
+
+  .post-link h2 {
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 0;
+    color: #333;
+    flex: 1;
+  }
+
+  .post-link:hover h2 {
+    color: #007acc;
+  }
+
+  .post-link time {
+    font-size: 0.85rem;
+    color: #666;
+    margin-left: 1rem;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .post-link {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .post-link time {
+      margin-left: 0;
+      margin-top: 0.25rem;
+    }
   }
 </style>

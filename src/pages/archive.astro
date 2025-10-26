@@ -20,7 +20,6 @@ const filteredPosts = posts.filter(post => post.Slug !== 'about')
   <div slot="main" class={styles.main}>
     <header class="archive-header">
       <h1>Blog Arşivi</h1>
-      <p>{filteredPosts.length} yazı</p>
     </header>
 
     <div class="archive-list">
@@ -46,12 +45,6 @@ const filteredPosts = posts.filter(post => post.Slug !== 'about')
     font-size: 2rem;
     margin-bottom: 0.5rem;
     color: #333;
-  }
-
-  .archive-header p {
-    color: #666;
-    font-size: 0.9rem;
-    margin: 0;
   }
 
   .archive-list {
