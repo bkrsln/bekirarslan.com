@@ -98,29 +98,17 @@ if (post.FeaturedImage && post.FeaturedImage.Url) {
   description={post.Excerpt}
   path={getPostLink(post.Slug)}
   ogImage={ogImage}
+  showBackButton={true}
 >
-  <div slot="main" class={styles.main}>
+  <div slot="main" class={styles.main} id="top">
     <div class={styles.post}>
       <PostTitle post={post} enableLink={false} />
       <PostDate post={post} />
-      <PostTags post={post} />
       <PostBody blocks={blocks} />
 
       <footer>
         <PostRelativeLink prevPost={prevPost} nextPost={nextPost} />
       </footer>
     </div>
-  </div>
-
-  <div slot="aside" class="aside">
-    <BlogPostsLink
-      heading="Posts in the same category"
-      posts={postsHavingSameTag.filter(
-        (p: interfaces.Post) => p.Slug !== post.Slug
-      )}
-    />
-    <BlogPostsLink heading="Recommended" posts={rankedPosts} />
-    <BlogPostsLink heading="Latest posts" posts={recentPosts} />
-    <BlogTagsLink heading="Categories" tags={tags} />
   </div>
 </Layout>

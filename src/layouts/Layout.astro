@@ -12,9 +12,10 @@ export interface Props {
   description: string
   path: string
   ogImage: string
+  showBackButton?: boolean
 }
 
-const { title = '', description = '', path = '/', ogImage = '' } = Astro.props
+const { title = '', description = '', path = '/', ogImage = '', showBackButton = false } = Astro.props
 
 const database = await getDatabase()
 
@@ -89,16 +90,45 @@ if (database.Icon && database.Icon.Type === 'file') {
       </header>
 
       <div>
+        <header class="site-header">
+          <h1>
+            {showBackButton && (
+              <a href={getNavLink('/')} class="back-button">←</a>
+            )}
+            <a href={getNavLink('/')}>
+              {
+                database.Icon && database.Icon.Type === 'emoji' ? (
+                  <>
+                    <span>{database.Icon.Emoji}</span>
+                    {database.Title}
+                  </>
+                ) : database.Icon && database.Icon.Type === 'external' ? (
+                  <>
+                    <img src={database.Icon.Url} alt="Site icon" />
+                    {database.Title}
+                  </>
+                ) : database.Icon && database.Icon.Type === 'file' ? (
+                  <>
+                    <img src={customIconURL} class="custom-icon" alt="Site icon" />
+                    {database.Title}
+                  </>
+                ) : (
+                  database.Title
+                )
+              }
+            </a>
+          </h1>
+        </header>
+        
         <main>
           <div class="content">
             <slot name="main" />
           </div>
         </main>
 
-        <aside>
-          <SearchButton />
-          <slot name="aside" />
-        </aside>
+        <footer class="site-footer">
+          <p>2008'den bu yana | Bekir Arslan</p>
+        </footer>
       </div>
     </div>
 
@@ -114,40 +144,76 @@ if (database.Icon && database.Icon.Type === 'file') {
 <style>
   .container {
     min-height: 100vh;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
   }
 
   .container > div {
-    display: flex;
-    max-width: 1280px;
+    display: block;
   }
-  @media (max-width: 640px) {
-    .container > div {
-      display: block;
-    }
+
+  .site-header {
+    padding: 20px 0;
+    border-bottom: 1px solid #e4e4e4;
+    margin-bottom: 2rem;
+  }
+
+  .site-header h1 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .site-header h1 a {
+    color: #333;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .site-header h1 a:hover {
+    color: #007acc;
+  }
+
+  .site-header .back-button {
+    font-size: 1.5rem;
+    color: #666;
+    text-decoration: none;
+    padding: 5px;
+  }
+
+  .site-header .back-button:hover {
+    color: #007acc;
+  }
+
+  .site-header img {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+  }
+
+  .site-header span {
+    font-size: 1.2em;
+  }
+
+  .site-footer {
+    margin-top: 3rem;
+    padding: 2rem 0;
+    border-top: 1px solid #e4e4e4;
+    text-align: center;
+  }
+
+  .site-footer p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
   }
 
   main {
-    flex: 1;
-    order: 2;
-    justify-content: space-between;
-  }
-  @media (max-width: 640px) {
-    main {
-      order: 1;
-    }
-  }
-
-  aside {
-    order: 1;
-    width: 300px;
-    padding: 20px 20px;
-    background-color: #f4f4f4;
-  }
-  @media (max-width: 640px) {
-    aside {
-      order: 2;
-      width: 100%;
-    }
+    width: 100%;
   }
 
   div.cover {
@@ -161,12 +227,7 @@ if (database.Icon && database.Icon.Type === 'file') {
   }
 
   div.content {
-    padding: 20px 40px;
-  }
-  @media (max-width: 640px) {
-    div.content {
-      padding: 0 18px;
-    }
+    padding: 20px 0;
   }
 
   main header {

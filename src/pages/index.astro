@@ -40,33 +40,23 @@ if (aboutPost) {
 
 <Layout>
   <div slot="main" class={styles.main}>
-    <!-- Blog Title -->
-    <header class="blog-header">
-      <h1>{database.Title}</h1>
-    </header>
-
     <!-- About Section -->
     {aboutPost && aboutBlocks && (
-      <div class="about-section">
+      <div class={styles.post}>
+        <PostTitle post={aboutPost} enableLink={false} />
         <PostBody blocks={aboutBlocks} />
       </div>
     )}
 
     <!-- Latest Posts Section -->
     <section class="latest-posts">
-      <h2>Son Yazılar</h2>
       {
         posts.length === 0 ? (
           <NoContents contents={posts} />
         ) : (
           posts.map((post) => (
             <div class={styles.post} key={post.Slug}>
-              <PostDate post={post} />
-              <PostTags post={post} />
               <PostTitle post={post} />
-              <PostFeaturedImage post={post} />
-              <PostExcerpt post={post} />
-              <ReadMoreLink post={post} />
             </div>
           ))
         )
@@ -77,54 +67,4 @@ if (aboutPost) {
       <Pagination currentPage={1} numberOfPages={numberOfPages} />
     </footer>
   </div>
-
-  <div slot="aside" class={styles.aside}>
-    <BlogPostsLink heading="Recommended" posts={rankedPosts} />
-    <BlogTagsLink heading="Categories" tags={tags} />
-  </div>
 </Layout>
-
-<style>
-  .blog-header {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #e4e4e4;
-  }
-
-  .blog-header h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #333;
-    margin: 0;
-  }
-
-  .about-section {
-    margin-bottom: 3rem;
-    padding: 1.5rem;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    border-left: 4px solid #007acc;
-  }
-
-  .latest-posts h2 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    color: #333;
-    border-bottom: 2px solid #007acc;
-    padding-bottom: 0.5rem;
-  }
-
-  @media (max-width: 640px) {
-    .blog-header h1 {
-      font-size: 2rem;
-    }
-    
-    .about-section {
-      margin: 0 -18px 2rem -18px;
-      padding: 1rem;
-      border-radius: 0;
-    }
-  }
-</style>
