@@ -40,15 +40,45 @@ if (block.Image.External) {
 <style>
   .image {
     display: flex;
-    margin: 0.2rem auto 0;
+    margin: 2rem 0;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
   }
+  
   .image > div {
     margin: 0 auto;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 20px;
   }
+  
   .image > div > div {
+    text-align: center;
   }
+  
   .image > div > div img {
     display: block;
-    max-width: 100%;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 800px) {
+    .image {
+      width: calc(100vw - 40px);
+      margin-left: -20px;
+      margin-right: -20px;
+      left: 0;
+      right: 0;
+    }
+    
+    .image > div {
+      padding: 0 10px;
+    }
   }
 </style>

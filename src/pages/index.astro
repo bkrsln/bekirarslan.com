@@ -2,32 +2,18 @@
 import { NUMBER_OF_POSTS_PER_PAGE } from '../server-constants.ts'
 import {
   getPosts,
-  getRankedPosts,
-  getAllTags,
-  getNumberOfPages,
   getPostBySlug,
   getAllBlocksByBlockId,
   getDatabase,
 } from '../lib/notion/client.ts'
 import Layout from '../layouts/Layout.astro'
 import NoContents from '../components/NoContents.astro'
-import PostDate from '../components/PostDate.astro'
-import PostTags from '../components/PostTags.astro'
 import PostTitle from '../components/PostTitle.astro'
-import PostFeaturedImage from '../components/PostFeaturedImage.astro'
-import PostExcerpt from '../components/PostExcerpt.astro'
-import ReadMoreLink from '../components/ReadMoreLink.astro'
-import Pagination from '../components/Pagination.astro'
-import BlogPostsLink from '../components/BlogPostsLink.astro'
-import BlogTagsLink from '../components/BlogTagsLink.astro'
 import PostBody from '../components/PostBody.astro'
 import styles from '../styles/blog.module.css'
 
-const [posts, rankedPosts, tags, numberOfPages, aboutPost, database] = await Promise.all([
+const [posts, aboutPost, database] = await Promise.all([
   getPosts(NUMBER_OF_POSTS_PER_PAGE),
-  getRankedPosts(),
-  getAllTags(),
-  getNumberOfPages(),
   getPostBySlug('about'),
   getDatabase(),
 ])
@@ -64,7 +50,27 @@ if (aboutPost) {
     </section>
 
     <footer>
-      <Pagination currentPage={1} numberOfPages={numberOfPages} />
+      <div class="archive-link">
+        <a href="/archive">Blog Arşivi →</a>
+      </div>
     </footer>
   </div>
 </Layout>
+
+<style>
+  .archive-link {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 1rem;
+  }
+
+  .archive-link a {
+    color: #007acc;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .archive-link a:hover {
+    text-decoration: underline;
+  }
+</style>

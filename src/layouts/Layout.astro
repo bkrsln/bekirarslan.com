@@ -69,6 +69,16 @@ if (database.Icon && database.Icon.Type === 'file') {
     <meta name="twitter:description" content={siteDescription} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage || siteOGImage} />
+    
+    <!-- Favicon -->
+    {database.Icon && database.Icon.Type === 'emoji' ? (
+      <link rel="icon" href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${database.Icon.Emoji}</text></svg>`} />
+    ) : database.Icon && database.Icon.Type === 'external' ? (
+      <link rel="icon" href={database.Icon.Url} />
+    ) : database.Icon && database.Icon.Type === 'file' ? (
+      <link rel="icon" href={customIconURL} />
+    ) : null}
+    
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
